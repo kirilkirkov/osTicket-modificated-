@@ -51,6 +51,8 @@ $unbannable=($emailBanned) ? BanList::includes($ticket->getEmail()) : false;
 if($ticket->isOverdue())
     $warn.='&nbsp;&nbsp;<span class="Icon overdueTicket">'.__('Marked overdue!').'</span>';
 
+$reply_templ = array();
+$reply_templ = db_fetch_array(db_query('SELECT body FROM '.EMAIL_TEMPLATE_TABLE.' WHERE code_name = "ticket.reply"'));
 ?>
 <table width="940" cellpadding="2" cellspacing="0" border="0">
     <tr>
@@ -677,6 +679,8 @@ print $response_form->getField('attachments')->render();
         <p  style="padding:0 165px;">
             <input class="btn_sm" type="submit" value="<?php echo __('Post Reply');?>">
             <input class="btn_sm" type="reset" value="<?php echo __('Reset');?>">
+            <input class="btn_sm" type="button" id="message-preview" value="<?php echo __('Preview');?>">
+            <div class="hidden" id="message-prev-templ"><?= isset($reply_templ['body'])? $reply_templ['body']:'' ?></div>
         </p>
     </form>
     <?php

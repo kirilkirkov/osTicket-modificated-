@@ -18,6 +18,9 @@ if ($info['topicId'] && ($topic=Topic::lookup($info['topicId']))) {
 if ($_POST)
     $info['duedate'] = Format::date($cfg->getDateFormat(),
        strtotime($info['duedate']));
+
+$reply_templ = array();
+$reply_templ = db_fetch_array(db_query('SELECT body FROM '.EMAIL_TEMPLATE_TABLE.' WHERE code_name = "ticket.notice"'));
 ?>
 <form action="tickets.php?a=open" method="post" id="save"  enctype="multipart/form-data">
  <?php csrf_token(); ?>
@@ -392,6 +395,8 @@ print $response_form->getField('attachments')->render();
         });
         window.location.href='tickets.php';
     ">
+    <input type="button" id="message-preview" value="<?php echo __('Preview');?>">
+    <div class="hidden" id="message-prev-templ"><?= isset($reply_templ['body'])? $reply_templ['body']:'' ?></div>
 </p>
 </form>
 <script type="text/javascript">

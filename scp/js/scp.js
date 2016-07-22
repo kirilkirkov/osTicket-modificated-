@@ -851,3 +851,28 @@ function __(s) {
     return $.oststrings[s];
   return s;
 }
+
+$('#message-preview').live('click', function() {
+    var templ = $('#message-prev-templ').html();
+    var will_send = templ;
+    var message_field = $('[name="message"]');
+    var response_field = $('[name="response"]');
+    if(message_field.length) {
+        var my_message = message_field.val();
+        var resp = '';
+        if(response_field.val().length) {
+            resp = '<br><br>'+response_field.val();
+        }
+        will_send = will_send.replace("%{message}", my_message+resp);
+    }
+    if(response_field.length) {
+        var my_response = response_field.val();
+        will_send = will_send.replace("%{response}", my_response);
+    }
+    $('#overlay, #popup').show();
+    $('#popup-loading').hide();
+    $('#popup div.body').empty().append('<h3>Message Preview</h3>')
+    .append('<a class="close" href="#"><i class="icon-remove-circle"></i></a>')
+    .append('<hr>')
+    .append('<div>'+will_send+'</div>');
+});
