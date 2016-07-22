@@ -110,8 +110,9 @@ if($_POST && !$errors):
                     'ticket.response.' . $ticket->getId(),
                     $thisstaff->getId());
 
-                // Go back to the ticket listing page on reply
-                $ticket = null;
+                // Stay to current page
+                Http::redirect('tickets.php?id='.$ticket->getId(), 0, $msg);
+                $ticket = $ticket->getId(); // To go to ticket listing page set to null and remove above line
 
             } elseif(!$errors['err']) {
                 $errors['err']=__('Unable to post the reply. Correct the errors below and try again!');

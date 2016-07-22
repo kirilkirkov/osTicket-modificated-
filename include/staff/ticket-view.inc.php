@@ -53,6 +53,11 @@ if($ticket->isOverdue())
 
 $reply_templ = array();
 $reply_templ = db_fetch_array(db_query('SELECT body FROM '.EMAIL_TEMPLATE_TABLE.' WHERE code_name = "ticket.reply"'));
+
+if(isset($_SESSION['redirect_msg'])) {
+    $msg = $_SESSION['redirect_msg'];
+    unset($_SESSION['redirect_msg']);
+}
 ?>
 <table width="940" cellpadding="2" cellspacing="0" border="0">
     <tr>

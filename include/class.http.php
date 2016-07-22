@@ -44,7 +44,10 @@ class Http {
     }
 
     function redirect($url,$delay=0,$msg='') {
-
+        
+        if($msg != '') {
+            $_SESSION['redirect_msg'] = $msg;
+        }
         $iis = strpos($_SERVER['SERVER_SOFTWARE'], 'IIS') !== false;
         @list($name, $version) = explode('/', $_SERVER['SERVER_SOFTWARE']);
         // Legacy code for older versions of IIS that would not emit the
