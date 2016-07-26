@@ -132,7 +132,7 @@ if(isset($_SESSION['redirect_msg'])) {
                     echo __('Delete Ticket'); ?></a></li>
                 <?php
                  }
-                if($ticket->isOpen() && ($dept && $dept->isManager($thisstaff))) {
+                if($ticket->isOpen() && $dept) {
 
                     if($ticket->isAssigned()) { ?>
                         <li><a  class="confirm-action" id="ticket-release" href="#release"><i class="icon-user"></i> <?php

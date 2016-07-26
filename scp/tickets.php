@@ -275,7 +275,7 @@ if($_POST && !$errors):
                     break;
                 case 'overdue':
                     $dept = $ticket->getDept();
-                    if(!$dept || !$dept->isManager($thisstaff)) {
+                    if(!$dept) {
                         $errors['err']=__('Permission Denied. You are not allowed to flag tickets overdue');
                     } elseif($ticket->markOverdue()) {
                         $msg=sprintf(__('Ticket flagged as overdue by %s'),$thisstaff->getName());
@@ -286,7 +286,7 @@ if($_POST && !$errors):
                     break;
                 case 'answered':
                     $dept = $ticket->getDept();
-                    if(!$dept || !$dept->isManager($thisstaff)) {
+                    if(!$dept) {
                         $errors['err']=__('Permission Denied. You are not allowed to flag tickets');
                     } elseif($ticket->markAnswered()) {
                         $msg=sprintf(__('Ticket flagged as answered by %s'),$thisstaff->getName());
@@ -297,7 +297,7 @@ if($_POST && !$errors):
                     break;
                 case 'unanswered':
                     $dept = $ticket->getDept();
-                    if(!$dept || !$dept->isManager($thisstaff)) {
+                    if(!$dept) {
                         $errors['err']=__('Permission Denied. You are not allowed to flag tickets');
                     } elseif($ticket->markUnAnswered()) {
                         $msg=sprintf(__('Ticket flagged as unanswered by %s'),$thisstaff->getName());
