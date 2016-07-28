@@ -2980,7 +2980,18 @@ class Ticket {
             else
                 $signature='';
 
-            $attachments =($cfg->emailAttachments() && $response)?$response->getAttachments():array();
+           $attachments = array();
+           if($cfg->emailAttachments()) {
+               $attachments = $ticket->getLastMessage()->getAttachments();
+               if($response) {
+                   $response_attachments = $response->getAttachments();
+                   if(empty($attachments)) {
+                       $attachments = $response_attachments;
+                   } else {
+                       $attachments = array_merge($attachments, $response_attachments);
+                   }
+               }
+           }
 
             $msg = $ticket->replaceVars($msg->asArray(),
                     array(
