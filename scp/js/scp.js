@@ -857,14 +857,12 @@ $('#message-preview').live('click', function() {
     var will_send = templ;
     var message_field = $('[name="message"]');
     var response_field = $('[name="response"]');
+    //if open new ticket
     if(message_field.length) {
         var my_message = message_field.val();
-        var resp = '';
-        if(response_field.val().length) {
-            resp = '<br><br>'+response_field.val();
-        }
-        will_send = will_send.replace("%{message}", my_message+resp);
+        will_send = will_send.replace("%{message}", my_message);
     }
+    //if response to ticket
     if(response_field.length) {
         var my_response = response_field.val();
         will_send = will_send.replace("%{response}", my_response);

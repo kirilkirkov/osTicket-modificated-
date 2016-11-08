@@ -268,58 +268,18 @@ $reply_templ = db_fetch_array(db_query('SELECT body FROM '.EMAIL_TEMPLATE_TABLE.
         ?>
         </tbody>
         <tbody> <?php
+        //is the user allowed to post replies??
+        if($thisstaff->canPostReply()) {
         $tform = TicketForm::getInstance();
         if ($_POST && !$tform->errors())
             $tform->isValidForStaff();
         $tform->render(true);
+        }
         ?>
         </tbody>
         <tbody>
-        <?php
-        //is the user allowed to post replies??
-        if($thisstaff->canPostReply()) { ?>
-        <tr>
-            <th colspan="2">
-                <em><strong><?php echo __('Response');?></strong>: <?php echo __('Optional response to the above issue.');?></em>
-            </th>
-        </tr>
         <tr>
             <td colspan=2>
-            <?php
-            if(($cannedResponses=Canned::getCannedResponses())) {
-                ?>
-                <div style="margin-top:0.3em;margin-bottom:0.5em">
-                    <?php echo __('Canned Response');?>:&nbsp;
-                    <select id="cannedResp" name="cannedResp">
-                        <option value="0" selected="selected">&mdash; <?php echo __('Select a canned response');?> &mdash;</option>
-                        <?php
-                        foreach($cannedResponses as $id =>$title) {
-                            echo sprintf('<option value="%d">%s</option>',$id,$title);
-                        }
-                        ?>
-                    </select>
-                    &nbsp;&nbsp;&nbsp;
-                    <label><input type='checkbox' value='1' name="append" id="append" checked="checked"><?php echo __('Append');?></label>
-                </div>
-            <?php
-            }
-                $signature = '';
-                if ($thisstaff->getDefaultSignatureType() == 'mine')
-                    $signature = $thisstaff->getSignature(); ?>
-                <textarea class="richtext ifhtml draft draft-delete"
-                    data-draft-namespace="ticket.staff.response"
-                    data-signature="<?php
-                        echo Format::htmlchars(Format::viewableImages($signature)); ?>"
-                    data-signature-field="signature" data-dept-field="deptId"
-                    placeholder="<?php echo __('Initial response for the ticket'); ?>"
-                    name="response" id="response" cols="21" rows="8"
-                    style="width:80%;"><?php echo $info['response']; ?></textarea>
-                    <div class="attachments">
-<?php
-print $response_form->getField('attachments')->render();
-?>
-                    </div>
-
                 <table border="0" cellspacing="0" cellpadding="2" width="100%">
             <tr>
                 <td width="100"><?php echo __('Ticket Status');?>:</td>
@@ -364,9 +324,6 @@ print $response_form->getField('attachments')->render();
             </table>
             </td>
         </tr>
-        <?php
-        } //end canPostReply
-        ?>
         <tr>
             <th colspan="2">
                 <em><strong><?php echo __('Internal Note');?></strong>
