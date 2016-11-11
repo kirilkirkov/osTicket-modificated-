@@ -267,13 +267,14 @@ $reply_templ = db_fetch_array(db_query('SELECT body FROM '.EMAIL_TEMPLATE_TABLE.
             }
         ?>
         </tbody>
-        <tbody> <?php
+        <tbody> 
+        <?php
         //is the user allowed to post replies??
         if($thisstaff->canPostReply()) {
-        $tform = TicketForm::getInstance();
-        if ($_POST && !$tform->errors())
-            $tform->isValidForStaff();
-        $tform->render(true);
+            $tform = TicketForm::getInstance();
+            if ($_POST && !$tform->errors())
+                $tform->isValidForStaff();
+            $tform->render(true);
         }
         ?>
         </tbody>
@@ -342,7 +343,7 @@ $reply_templ = db_fetch_array(db_query('SELECT body FROM '.EMAIL_TEMPLATE_TABLE.
     </tbody>
 </table>
 <p style="text-align:center;">
-    <input type="submit" name="submit" value="<?php echo _P('action-button', 'Open');?>">
+    <input type="submit" class="confirm-submit" name="submit" value="<?php echo _P('action-button', 'Open');?>">
     <input type="reset"  name="reset"  value="<?php echo __('Reset');?>">
     <input type="button" name="cancel" value="<?php echo __('Cancel');?>" onclick="javascript:
         $('.richtext').each(function() {
@@ -390,3 +391,19 @@ $(function() {
 });
 </script>
 
+<div style="display:none; z-index: 1006;" class="dialog" id="confirm-submit">
+    <h3><?php echo __('Please Confirm');?></h3>
+    <a class="close" href=""><i class="icon-remove-circle"></i></a>
+    <hr/>
+    <div id="will-send-message"></div>
+    <hr style="margin-top:1em"/>
+    <p class="full-width">
+        <span class="buttons pull-left">
+            <input type="button" value="<?php echo __('No, Cancel');?>" class="close">
+        </span>
+        <span class="buttons pull-right">
+            <input type="button" value="<?php echo __('Yes, Do it!');?>" class="confirm">
+        </span>
+     </p>
+    <div class="clear"></div>
+</div>

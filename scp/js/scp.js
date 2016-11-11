@@ -853,6 +853,33 @@ function __(s) {
 }
 
 $('#message-preview').live('click', function() {
+    var will_send = getSendMessage();
+    $('#overlay, #popup').show();
+    $('#popup-loading').hide();
+    $('#popup div.body').empty().append('<h3>Message Preview</h3>')
+    .append('<a class="close" href="#"><i class="icon-remove-circle"></i></a>')
+    .append('<hr>')
+    .append('<div>'+will_send+'</div>');
+});
+ 
+send_confirmed  = 0;
+$('.confirm-submit').live('click', function(e) {
+    if(send_confirmed == 0) { 
+        e.preventDefault();
+        var will_send = getSendMessage();
+        $('#will-send-message').empty().append(will_send);
+        $.toggleOverlay(true);
+        $('.dialog#confirm-submit').show();
+    }
+});
+
+$('.dialog#confirm-submit .confirm').live('click', function() {
+    send_confirmed = 1;
+    $('.confirm-submit').trigger('click');
+   
+});
+
+function getSendMessage() {
     var templ = $('#message-prev-templ').html();
     var will_send = templ;
     var message_field = $('[name="message"]');
@@ -867,10 +894,5 @@ $('#message-preview').live('click', function() {
         var my_response = response_field.val();
         will_send = will_send.replace("%{response}", my_response);
     }
-    $('#overlay, #popup').show();
-    $('#popup-loading').hide();
-    $('#popup div.body').empty().append('<h3>Message Preview</h3>')
-    .append('<a class="close" href="#"><i class="icon-remove-circle"></i></a>')
-    .append('<hr>')
-    .append('<div>'+will_send+'</div>');
-});
+    return will_send;
+}

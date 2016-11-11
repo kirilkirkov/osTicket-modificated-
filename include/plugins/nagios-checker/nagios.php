@@ -83,7 +83,7 @@ class NagiosPlugin extends Plugin {
 		
 		// Is this working time?
 		if(time() >= strtotime(date('Y-m-d '.$config->get('work_start')).' +'.intval($config->get('answer_timeout')).' minutes') && time() < strtotime(date('Y-m-d '.$config->get('work_end').''))){
-			$sql="SELECT * FROM ost_ticket WHERE status_id=1 AND (lastmessage>lastresponse OR lastresponse IS NULL)";
+			$sql="SELECT * FROM ost_ticket WHERE status_id=1 AND isanswered=0 AND (lastmessage>lastresponse OR lastresponse IS NULL)";
 			if(($res=db_query($sql)) && db_num_rows($res)) {
 				$critical=0;
 				$warning=0;
@@ -323,10 +323,11 @@ class NagiosPlugin extends Plugin {
 		if( ($res=db_query($sql)) && db_num_rows($res)){
 			$data=db_fetch_array($res);
 			if($data['format'] == 'html'){
-				$quote = '<blockquote type="cite" class="gmail_quote" style="margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">'.$data['body'].'</blockquote>';
+				$dataBody = $data['body'];
 			}else{
-				$quote = '<blockquote type="cite" class="gmail_quote" style="margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">'.nl2br($data['body']).'</blockquote>';
+				$dataBody = nl2br($data['body']);
 			}
+            $quote = '<blockquote type="cite" class="gmail_quote" style="margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">'.$dataBody.'</blockquote>';
 			$msg['body'] = $obj->replaceVars($msg['body'], array(
 				'quote'=>$quote,
 			));

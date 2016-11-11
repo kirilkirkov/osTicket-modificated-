@@ -51,12 +51,16 @@ $unbannable=($emailBanned) ? BanList::includes($ticket->getEmail()) : false;
 if($ticket->isOverdue())
     $warn.='&nbsp;&nbsp;<span class="Icon overdueTicket">'.__('Marked overdue!').'</span>';
 
-$reply_templ = array();
-$reply_templ = db_fetch_array(db_query('SELECT body FROM '.EMAIL_TEMPLATE_TABLE.' WHERE code_name = "ticket.reply"'));
-
 if(isset($_SESSION['redirect_msg'])) {
     $msg = $_SESSION['redirect_msg'];
     unset($_SESSION['redirect_msg']);
+}
+
+$tpl = $dept->getTemplate();
+$msgTemplate = $tpl->getReplyMsgTemplate();
+$myMsg = $msgTemplate->ht;
+if(class_exists('NagiosPlugin')){
+    NagiosPlugin::changeReply($ticket, $myMsg);
 }
 ?>
 <table width="940" cellpadding="2" cellspacing="0" border="0">
@@ -682,10 +686,10 @@ print $response_form->getField('attachments')->render();
          </tbody>
         </table>
         <p  style="padding:0 165px;">
-            <input class="btn_sm" type="submit" value="<?php echo __('Post Reply');?>">
+            <input class="btn_sm confirm-submit" type="submit" value="<?php echo __('Post Reply');?>">
             <input class="btn_sm" type="reset" value="<?php echo __('Reset');?>">
             <input class="btn_sm" type="button" id="message-preview" value="<?php echo __('Preview');?>">
-            <div class="hidden" id="message-prev-templ"><?= isset($reply_templ['body'])? $reply_templ['body']:'' ?></div>
+            <div class="hidden" id="message-prev-templ"><?= isset($myMsg['body']) ? $myMsg['body'] : '' ?></div>
         </p>
     </form>
     <?php
@@ -1017,6 +1021,22 @@ print $note_form->getField('attachments')->render();
             </span>
          </p>
     </form>
+    <div class="clear"></div>
+</div>
+<div style="display:none; z-index: 1006;" class="dialog" id="confirm-submit">
+    <h3><?php echo __('Please Confirm');?></h3>
+    <a class="close" href=""><i class="icon-remove-circle"></i></a>
+    <hr/>
+    <div id="will-send-message"></div>
+    <hr style="margin-top:1em"/>
+    <p class="full-width">
+        <span class="buttons pull-left">
+            <input type="button" value="<?php echo __('No, Cancel');?>" class="close">
+        </span>
+        <span class="buttons pull-right">
+            <input type="button" value="<?php echo __('Yes, Do it!');?>" class="confirm">
+        </span>
+     </p>
     <div class="clear"></div>
 </div>
 <script type="text/javascript">
